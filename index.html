@@ -3,16 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test TTS</title>
+  <title>Vittorino Bot</title>
 </head>
 <body>
-  <h1>Test Text-to-Speech</h1>
+  <h1>Vittorino Bot</h1>
 
-  <button onclick="testTTS()">Fai parlare il TTS</button>
+  <!-- Integrazione di Dialogflow Messenger -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 
+  <df-messenger
+    intent="WELCOME"
+    chat-title="Vittorino_Bot"
+    agent-id="8796712f-5742-49e6-a47f-97c955f84d15"
+    language-code="it"
+  ></df-messenger>
+
+  <!-- Codice per attivare il Text-to-Speech -->
   <script>
-    function testTTS() {
-      const text = "Ciao, questo è un test di Text-to-Speech.";
+    // Funzione per far parlare il bot usando la Web Speech API
+    function speakText(text) {
+      console.log("Tentativo di avviare il TTS con il testo:", text);
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'it-IT';  // Imposta la lingua italiana
 
@@ -30,6 +40,28 @@
 
       window.speechSynthesis.speak(utterance);  // Avvia il TTS
     }
+
+    // Ascolta le risposte del bot e avvia il TTS
+    window.addEventListener('dfMessengerLoaded', function(event) {
+      const dfMessenger = document.querySelector('df-messenger');
+
+      dfMessenger.addEventListener('dfResponseMessage', function(event) {
+        console.log('Evento risposta ricevuto:', event);  // Debug per vedere cosa arriva
+
+        // Verifica se c'è una risposta testuale dal bot
+        if (event.detail && event.detail.queryResult && event.detail.queryResult.fulfillmentText) {
+          const botResponse = event.detail.queryResult.fulfillmentText;
+          console.log('Messaggio del bot intercettato:', botResponse);
+
+          // Se c'è una risposta, la facciamo leggere dal TTS
+          if (botResponse) {
+            speakText(botResponse);
+          }
+        } else {
+          console.log('Nessun testo di risposta trovato nell\'evento.');
+        }
+      });
+    });
   </script>
 </body>
 </html>
