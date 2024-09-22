@@ -26,17 +26,14 @@
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'it-IT';  // Imposta la lingua italiana
 
-      // Log per vedere se il TTS si avvia
       utterance.onstart = function() {
         console.log('TTS avviato: ' + text);
       };
 
-      // Gestione errori del TTS
       utterance.onerror = function(event) {
         console.error('Errore nel TTS:', event.error);
       };
 
-      // Verifica quando il TTS termina
       utterance.onend = function() {
         console.log('TTS terminato.');
       };
@@ -46,6 +43,7 @@
 
     // Ascolta le risposte del bot e avvia il TTS
     window.addEventListener('dfMessengerLoaded', function(event) {
+      console.log('Dialogflow Messenger caricato.');
       const dfMessenger = document.querySelector('df-messenger');
 
       dfMessenger.addEventListener('dfResponseMessage', function(event) {
@@ -68,4 +66,3 @@
   </script>
 </body>
 </html>
-
