@@ -26,7 +26,7 @@
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'it-IT';  // Imposta la lingua italiana
 
-      // Aggiungiamo log per vedere se il TTS si avvia
+      // Log per vedere se il TTS si avvia
       utterance.onstart = function() {
         console.log('TTS avviato: ' + text);
       };
@@ -49,7 +49,7 @@
       const dfMessenger = document.querySelector('df-messenger');
 
       dfMessenger.addEventListener('dfResponseMessage', function(event) {
-        console.log('Evento risposta ricevuto:', event);  // Log completo dell'evento per vedere cosa arriva
+        console.log('Evento risposta ricevuto:', event);  // Debug per vedere l'evento
 
         // Verifica se c'è una risposta testuale dal bot
         if (event.detail && event.detail.queryResult && event.detail.queryResult.fulfillmentText) {
