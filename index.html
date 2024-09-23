@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Selettore Migliorato</title>
+  <title>Vittorino Bot con Debug Avanzato</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -18,49 +18,25 @@
     language-code="it"
   ></df-messenger>
 
-  <!-- Codice per attivare il Text-to-Speech -->
+  <!-- Codice per esplorare il contenuto dell'iframe -->
   <script>
-    // Funzione per far parlare il bot usando la Web Speech API
-    function speakText(text) {
-      console.log("Tentativo di avviare il TTS con il testo:", text);
-      const testUtterance = new SpeechSynthesisUtterance(text);
-      testUtterance.lang = 'it-IT';  // Imposta la lingua italiana
+    function logIframeContent() {
+      const iframe = document.querySelector('df-messenger iframe');
+      if (iframe) {
+        const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-      testUtterance.onstart = function() {
-        console.log('TTS avviato: ' + text);
-      };
-
-      testUtterance.onerror = function(event) {
-        console.error('Errore nel TTS:', event.error);
-      };
-
-      testUtterance.onend = function() {
-        console.log('TTS terminato.');
-      };
-
-      window.speechSynthesis.speak(testUtterance);  // Avvia il TTS
-    }
-
-    // Funzione per controllare il DOM e cercare nuove risposte del bot
-    function checkForNewMessages() {
-      // Selettore più specifico per il contenuto del messaggio del bot
-      const chatMessages = document.querySelectorAll('df-messenger .message');  // Modifica selettore
-      const lastMessage = chatMessages[chatMessages.length - 1];  // Prendi l'ultimo messaggio
-
-      if (lastMessage && lastMessage.textContent) {
-        const messageText = lastMessage.textContent.trim();
-        console.log("Ultimo messaggio nella chat:", messageText);
-        speakText(messageText);  // Attiva il TTS con il messaggio
+        if (iframeDocument) {
+          console.log('Contenuto dell\'iframe:', iframeDocument.body.innerHTML);
+        } else {
+          console.log('Impossibile accedere al contenuto dell\'iframe.');
+        }
       } else {
-        console.log("Nessun nuovo messaggio trovato.");
+        console.log('Iframe non trovato.');
       }
     }
 
-    // Controlla ogni 3 secondi se ci sono nuovi messaggi nella chat
-    setInterval(checkForNewMessages, 3000);
-
+    // Aspettiamo qualche secondo per assicurarci che l'iframe sia caricato, poi logghiamo il contenuto
+    setTimeout(logIframeContent, 3000);
   </script>
 </body>
 </html>
-
-
