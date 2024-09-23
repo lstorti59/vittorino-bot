@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Selettore Mirato</title>
+  <title>Vittorino Bot con Selettore Generale</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -18,7 +18,7 @@
     language-code="it"
   ></df-messenger>
 
-  <!-- Codice per attivare il Text-to-Speech con selettore più mirato -->
+  <!-- Codice per attivare il Text-to-Speech cercando qualsiasi nodo di testo -->
   <script>
     function speakText(text) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -26,25 +26,23 @@
       window.speechSynthesis.speak(utterance);
     }
 
-    // Funzione per monitorare i cambiamenti nella chat
+    // Funzione per monitorare i cambiamenti nella chat cercando qualsiasi testo
     function observeChat() {
       const targetNode = document.querySelector('df-messenger');
       if (targetNode) {
         const observer = new MutationObserver((mutationsList) => {
           mutationsList.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-              // Verifica se il nuovo nodo è un messaggio visibile
-              if (node.nodeType === Node.ELEMENT_NODE && node.querySelector('.message')) {
-                const messageText = node.querySelector('.message').innerText;
-                console.log('Testo del nuovo messaggio:', messageText);
-                speakText(messageText);  // Legge il messaggio con TTS
+              if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                console.log('Nuovo nodo con testo rilevato:', node.innerText);
+                speakText(node.innerText);  // Attiva il TTS per qualsiasi testo trovato
               }
             });
           });
         });
 
         observer.observe(targetNode, { childList: true, subtree: true });
-        console.log("Osservatore attivato.");
+        console.log("Osservatore attivato per qualsiasi testo.");
       } else {
         console.log("Elemento df-messenger non trovato.");
       }
@@ -57,3 +55,4 @@
   </script>
 </body>
 </html>
+
