@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Debug TTS</title>
+  <title>Vittorino Bot con TTS Alternativo</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -41,32 +41,23 @@
       window.speechSynthesis.speak(testUtterance);  // Avvia il TTS
     }
 
-    // Ascolta le risposte del bot e avvia il TTS
-    window.addEventListener('dfMessengerLoaded', function(event) {
-      console.log('Dialogflow Messenger caricato.');
-      const dfMessenger = document.querySelector('df-messenger');
+    // Funzione per controllare il DOM e cercare nuove risposte del bot
+    function checkForNewMessages() {
+      const chatMessages = document.querySelectorAll('df-messenger .df-message');
+      const lastMessage = chatMessages[chatMessages.length - 1];  // Prendi l'ultimo messaggio
 
-      dfMessenger.addEventListener('dfResponseMessage', function(event) {
-        console.log('Evento di risposta intercettato, controlliamo...');  // Messaggio iniziale di debug
+      if (lastMessage && lastMessage.innerText) {
+        const messageText = lastMessage.innerText;
+        console.log("Ultimo messaggio nella chat:", messageText);
+        speakText(messageText);  // Attiva il TTS con il messaggio
+      } else {
+        console.log("Nessun nuovo messaggio trovato.");
+      }
+    }
 
-        if (event.detail) {
-          console.log("Dettaglio dell'evento ricevuto:", event.detail);
-        }
+    // Controlla ogni 2 secondi se ci sono nuovi messaggi nella chat
+    setInterval(checkForNewMessages, 2000);
 
-        // Verifica se c'è una risposta testuale dal bot
-        if (event.detail && event.detail.response && event.detail.response.queryResult && event.detail.response.queryResult.fulfillmentText) {
-          const botResponse = event.detail.response.queryResult.fulfillmentText;
-          console.log('Messaggio del bot intercettato:', botResponse);  // Debug nella console
-
-          // Se c'è una risposta, la facciamo leggere dal TTS
-          if (botResponse) {
-            speakText(botResponse);
-          }
-        } else {
-          console.log('Nessun testo di risposta trovato nell\'evento.');
-        }
-      });
-    });
   </script>
 </body>
 </html>
