@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Debug Avanzato TTS</title>
+  <title>Vittorino Bot con Selettore Migliorato</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -43,11 +43,12 @@
 
     // Funzione per controllare il DOM e cercare nuove risposte del bot
     function checkForNewMessages() {
-      const chatMessages = document.querySelectorAll('df-messenger .df-message');
+      // Selettore più specifico per il contenuto del messaggio del bot
+      const chatMessages = document.querySelectorAll('df-messenger .message');  // Modifica selettore
       const lastMessage = chatMessages[chatMessages.length - 1];  // Prendi l'ultimo messaggio
 
-      if (lastMessage && lastMessage.innerText) {
-        const messageText = lastMessage.innerText;
+      if (lastMessage && lastMessage.textContent) {
+        const messageText = lastMessage.textContent.trim();
         console.log("Ultimo messaggio nella chat:", messageText);
         speakText(messageText);  // Attiva il TTS con il messaggio
       } else {
@@ -61,4 +62,5 @@
   </script>
 </body>
 </html>
+
 
