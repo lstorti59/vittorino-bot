@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Debug Avanzato</title>
+  <title>Vittorino Bot con Debug Continuo</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -21,19 +21,20 @@
   <!-- Codice per controllare il DOM e cercare nuovi messaggi del bot -->
   <script>
     function logChatContent() {
-      const messages = document.querySelectorAll('df-messenger .df-message');  // Proviamo a selezionare le classi df-message
+      const messages = document.querySelectorAll('df-messenger .df-message');
       if (messages.length > 0) {
         messages.forEach((message, index) => {
           console.log(`Messaggio ${index + 1}:`, message.innerText);
         });
       } else {
-        console.log('Nessun messaggio trovato.');
+        console.log('Nessun messaggio trovato, tentativo ripetuto.');
       }
     }
 
-    // Esegui il controllo dei messaggi ogni 3 secondi
-    setInterval(logChatContent, 3000);
+    // Esegui il controllo ogni 2 secondi per catturare i nuovi messaggi
+    setInterval(logChatContent, 2000);
   </script>
 </body>
 </html>
+
 
