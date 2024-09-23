@@ -3,64 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Classi CSS Mirate</title>
+  <title>Test TTS</title>
 </head>
 <body>
-  <h1>Vittorino Bot</h1>
+  <h1>Test Text-to-Speech</h1>
 
-  <!-- Integrazione di Dialogflow Messenger -->
-  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <button onclick="testTTS()">Fai parlare il browser</button>
 
-  <df-messenger
-    intent="WELCOME"
-    chat-title="Vittorino_Bot"
-    agent-id="8796712f-5742-49e6-a47f-97c955f84d15"
-    language-code="it"
-  ></df-messenger>
-
-  <!-- Codice per attivare il Text-to-Speech monitorando le classi CSS rilevate -->
   <script>
-    function speakText(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'it-IT';  // Imposta la lingua italiana
+    function testTTS() {
+      const utterance = new SpeechSynthesisUtterance("Ciao, questo è un test del Text-to-Speech.");
+      utterance.lang = 'it-IT';
       window.speechSynthesis.speak(utterance);
     }
-
-    // Funzione per monitorare i cambiamenti nella chat cercando i messaggi bot e utente
-    function observeChat() {
-      const targetNode = document.querySelector('df-messenger');
-      if (targetNode) {
-        const observer = new MutationObserver((mutationsList) => {
-          mutationsList.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              // Verifica se il nuovo nodo contiene un messaggio del bot o dell'utente
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                const botMessage = node.querySelector('.df-messenger-bot-message');
-                const userMessage = node.querySelector('.df-messenger-user-message');
-
-                if (botMessage) {
-                  console.log('Messaggio del bot rilevato:', botMessage.innerText);
-                  speakText(botMessage.innerText);  // Attiva il TTS per il messaggio del bot
-                }
-                if (userMessage) {
-                  console.log('Messaggio dell\'utente rilevato:', userMessage.innerText);
-                }
-              }
-            });
-          });
-        });
-
-        observer.observe(targetNode, { childList: true, subtree: true });
-        console.log("Osservatore attivato per messaggi del bot e dell'utente.");
-      } else {
-        console.log("Elemento df-messenger non trovato.");
-      }
-    }
-
-    // Avvia l'osservazione del DOM dopo che la pagina è stata caricata
-    window.onload = function() {
-      setTimeout(observeChat, 2000);  // Attendi 2 secondi per caricare completamente la chat
-    };
   </script>
 </body>
 </html>
