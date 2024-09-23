@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Debug TTS</title>
+  <title>Vittorino Bot con Debug Avanzato TTS</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -48,6 +48,10 @@
 
       dfMessenger.addEventListener('dfResponseMessage', function(event) {
         console.log('Evento risposta ricevuto:', event);  // Debug per vedere cosa arriva
+
+        if (event.detail) {
+          console.log("Dettaglio dell'evento ricevuto:", event.detail);
+        }
 
         // Verifica se c'è una risposta testuale dal bot
         if (event.detail && event.detail.response && event.detail.response.queryResult && event.detail.response.queryResult.fulfillmentText) {
