@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con Debug Continuo</title>
+  <title>Vittorino Bot con MutationObserver</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -18,21 +18,41 @@
     language-code="it"
   ></df-messenger>
 
-  <!-- Codice per controllare il DOM e cercare nuovi messaggi del bot -->
+  <!-- Codice per attivare il Text-to-Speech con MutationObserver -->
   <script>
-    function logChatContent() {
-      const messages = document.querySelectorAll('df-messenger .df-message');
-      if (messages.length > 0) {
-        messages.forEach((message, index) => {
-          console.log(`Messaggio ${index + 1}:`, message.innerText);
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'it-IT';  // Imposta la lingua italiana
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Funzione per monitorare i cambiamenti nella chat
+    function observeChat() {
+      const targetNode = document.querySelector('df-messenger');  // Elemento da osservare
+      if (targetNode) {
+        const observer = new MutationObserver((mutationsList) => {
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+              const newMessage = mutation.addedNodes[0]?.innerText;  // Controlla i nuovi nodi aggiunti
+              if (newMessage) {
+                console.log('Nuovo messaggio rilevato:', newMessage);
+                speakText(newMessage);  // Attiva il Text-to-Speech
+              }
+            }
+          }
         });
+
+        observer.observe(targetNode, { childList: true, subtree: true });
+        console.log("Osservatore attivato.");
       } else {
-        console.log('Nessun messaggio trovato, tentativo ripetuto.');
+        console.log("Elemento df-messenger non trovato.");
       }
     }
 
-    // Esegui il controllo ogni 2 secondi per catturare i nuovi messaggi
-    setInterval(logChatContent, 2000);
+    // Avvia l'osservazione del DOM dopo che la pagina è stata caricata
+    window.onload = function() {
+      setTimeout(observeChat, 2000);  // Attendi 2 secondi per caricare completamente la chat
+    };
   </script>
 </body>
 </html>
