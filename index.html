@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con MutationObserver Esteso</title>
+  <title>Vittorino Bot con Selettore Mirato</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -18,7 +18,7 @@
     language-code="it"
   ></df-messenger>
 
-  <!-- Codice per attivare il Text-to-Speech con MutationObserver e logging esteso -->
+  <!-- Codice per attivare il Text-to-Speech con selettore più mirato -->
   <script>
     function speakText(text) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -33,19 +33,18 @@
         const observer = new MutationObserver((mutationsList) => {
           mutationsList.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                console.log('Nuovo elemento aggiunto:', node);
-                if (node.innerText) {
-                  console.log('Testo del nuovo elemento:', node.innerText);
-                  speakText(node.innerText);  // Attiva il TTS se il testo è presente
-                }
+              // Verifica se il nuovo nodo è un messaggio visibile
+              if (node.nodeType === Node.ELEMENT_NODE && node.querySelector('.message')) {
+                const messageText = node.querySelector('.message').innerText;
+                console.log('Testo del nuovo messaggio:', messageText);
+                speakText(messageText);  // Legge il messaggio con TTS
               }
             });
           });
         });
 
         observer.observe(targetNode, { childList: true, subtree: true });
-        console.log("Osservatore esteso attivato.");
+        console.log("Osservatore attivato.");
       } else {
         console.log("Elemento df-messenger non trovato.");
       }
@@ -58,4 +57,3 @@
   </script>
 </body>
 </html>
-
