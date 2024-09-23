@@ -23,22 +23,22 @@
     // Funzione per far parlare il bot usando la Web Speech API
     function speakText(text) {
       console.log("Tentativo di avviare il TTS con il testo:", text);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'it-IT';  // Imposta la lingua italiana
+      const testUtterance = new SpeechSynthesisUtterance(text);
+      testUtterance.lang = 'it-IT';  // Imposta la lingua italiana
 
-      utterance.onstart = function() {
+      testUtterance.onstart = function() {
         console.log('TTS avviato: ' + text);
       };
 
-      utterance.onerror = function(event) {
+      testUtterance.onerror = function(event) {
         console.error('Errore nel TTS:', event.error);
       };
 
-      utterance.onend = function() {
+      testUtterance.onend = function() {
         console.log('TTS terminato.');
       };
 
-      window.speechSynthesis.speak(utterance);  // Avvia il TTS
+      window.speechSynthesis.speak(testUtterance);  // Avvia il TTS
     }
 
     // Ascolta le risposte del bot e avvia il TTS
@@ -66,4 +66,3 @@
   </script>
 </body>
 </html>
-
