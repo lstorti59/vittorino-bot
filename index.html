@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vittorino Bot con TTS</title>
+  <title>Vittorino Bot con Debug TTS</title>
 </head>
 <body>
   <h1>Vittorino Bot</h1>
@@ -52,7 +52,7 @@
         // Verifica se c'è una risposta testuale dal bot
         if (event.detail && event.detail.response && event.detail.response.queryResult && event.detail.response.queryResult.fulfillmentText) {
           const botResponse = event.detail.response.queryResult.fulfillmentText;
-          console.log('Messaggio del bot intercettato:', botResponse);
+          console.log('Messaggio del bot intercettato:', botResponse);  // Debug nella console
 
           // Se c'è una risposta, la facciamo leggere dal TTS
           if (botResponse) {
