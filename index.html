@@ -18,25 +18,22 @@
     language-code="it"
   ></df-messenger>
 
-  <!-- Codice per esplorare il contenuto dell'iframe -->
+  <!-- Codice per controllare il DOM e cercare nuovi messaggi del bot -->
   <script>
-    function logIframeContent() {
-      const iframe = document.querySelector('df-messenger iframe');
-      if (iframe) {
-        const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-
-        if (iframeDocument) {
-          console.log('Contenuto dell\'iframe:', iframeDocument.body.innerHTML);
-        } else {
-          console.log('Impossibile accedere al contenuto dell\'iframe.');
-        }
+    function logChatContent() {
+      const messages = document.querySelectorAll('df-messenger .df-message');  // Proviamo a selezionare le classi df-message
+      if (messages.length > 0) {
+        messages.forEach((message, index) => {
+          console.log(`Messaggio ${index + 1}:`, message.innerText);
+        });
       } else {
-        console.log('Iframe non trovato.');
+        console.log('Nessun messaggio trovato.');
       }
     }
 
-    // Aspettiamo qualche secondo per assicurarci che l'iframe sia caricato, poi logghiamo il contenuto
-    setTimeout(logIframeContent, 3000);
+    // Esegui il controllo dei messaggi ogni 3 secondi
+    setInterval(logChatContent, 3000);
   </script>
 </body>
 </html>
+
