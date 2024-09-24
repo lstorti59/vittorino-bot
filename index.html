@@ -31,27 +31,30 @@
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
         console.log("df-messenger trovato.");
-        const shadowRoot = dfMessenger.shadowRoot || dfMessenger.attachShadow({mode: 'open'});
-        if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('.message-list');
-          if (messageList) {
-            const observer = new MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                  if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
-                    console.log("Messaggio del bot rilevato:", node.innerText);
-                    speakText(node.innerText);  // Attiva il TTS
-                  }
+        const iframe = dfMessenger.shadowRoot.querySelector('iframe');
+        if (iframe) {
+          iframe.addEventListener('load', () => {
+            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            const messageList = iframeDocument.querySelector('.message-list');
+            if (messageList) {
+              const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                  mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                      console.log("Messaggio del bot rilevato:", node.innerText);
+                      speakText(node.innerText);  // Attiva il TTS
+                    }
+                  });
                 });
               });
-            });
-            observer.observe(messageList, { childList: true });
-            console.log("Osservatore attivato per i messaggi.");
-          } else {
-            console.error("messageList non trovato nel shadowRoot.");
-          }
+              observer.observe(messageList, { childList: true });
+              console.log("Osservatore attivato per i messaggi.");
+            } else {
+              console.error("messageList non trovato nel documento dell'iframe.");
+            }
+          });
         } else {
-          console.error("shadowRoot non trovato.");
+          console.error("iframe non trovato nel shadowRoot.");
         }
       } else {
         console.error("df-messenger non trovato.");
