@@ -33,8 +33,8 @@
         console.log("df-messenger trovato.");
         const shadowRoot = dfMessenger.shadowRoot || dfMessenger.attachShadow({mode: 'open'});
         if (shadowRoot) {
-          const chatList = shadowRoot.querySelector('df-message-list');
-          if (chatList) {
+          const messageList = shadowRoot.querySelector('.message-list');
+          if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
@@ -45,10 +45,10 @@
                 });
               });
             });
-            observer.observe(chatList, { childList: true });
-            console.log("Listener aggiunto per nuovi messaggi.");
+            observer.observe(messageList, { childList: true });
+            console.log("Osservatore attivato per i messaggi.");
           } else {
-            console.error("Impossibile trovare il message list nel shadowRoot.");
+            console.error("messageList non trovato nel shadowRoot.");
           }
         } else {
           console.error("shadowRoot non trovato.");
