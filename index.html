@@ -39,7 +39,6 @@
     function observeMessages() {
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
-        // Accedi allo shadowRoot del df-messenger
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
           const messageList = shadowRoot.querySelector('#messageList');
@@ -76,9 +75,8 @@
       }
     }
 
-    // Attiva l'osservatore una volta che la pagina è caricata
     window.onload = function() {
-      setTimeout(observeMessages, 2000); // Aspetta 2 secondi per permettere alla chat di caricarsi
+      setTimeout(observeMessages, 2000);
     };
   </script>
 </body>
