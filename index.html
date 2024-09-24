@@ -40,6 +40,7 @@
     function observeMessages() {
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
+        console.log("df-messenger trovato, avvio osservatore.");
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
@@ -48,6 +49,8 @@
                 if (node.innerText) {
                   console.log('Messaggio del bot rilevato:', node.innerText);
                   speakText(node.innerText);  // Attiva il TTS
+                } else {
+                  console.log("Nodo rilevato, ma senza testo.");
                 }
               }
             });
@@ -63,9 +66,11 @@
 
     // Attiva l'osservatore una volta che la pagina è caricata
     window.onload = function() {
+      console.log("Pagina caricata, avvio l'osservatore.");
       setTimeout(observeMessages, 2000);  // Attendi 2 secondi per assicurarti che il DOM sia completamente caricato
     };
   </script>
 
 </body>
 </html>
+
