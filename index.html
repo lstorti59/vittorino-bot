@@ -67,6 +67,37 @@
     window.onload = function() {
       setTimeout(observeMessages, 2000);  // Aspetta 2 secondi per permettere alla chat di caricarsi
     };
+    <script>
+  // Funzione per avviare il Text-to-Speech
+  function speakMessage(message) {
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = 'it-IT';
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Osservatore per monitorare i cambiamenti nel DOM
+  const targetNode = document.querySelector('#messageList'); // Controlla se questo è corretto
+  const config = { childList: true, subtree: true };
+
+  const callback = function(mutationsList, observer) {
+    for (let mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('bot-message')) {
+            const messageText = node.textContent.trim();
+            speakMessage(messageText); // Avvia il Text-to-Speech
+          }
+        });
+      }
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+  observer.observe(targetNode, config);
+</script>
+</body>
+</html>
+
   </script>
 </body>
 </html>
