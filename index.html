@@ -3,19 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test TTS</title>
+  <title>Vittorino Bot</title>
 </head>
 <body>
-  <h1>Test Text-to-Speech</h1>
+  <h1>Vittorino Bot</h1>
 
-  <button onclick="testTTS()">Fai parlare il browser</button>
+  <!-- Integrazione di Dialogflow Messenger -->
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 
+  <df-messenger
+    intent="WELCOME"
+    chat-title="Vittorino_Bot"
+    agent-id="8796712f-5742-49e6-a47f-97c955f84d15"
+    language-code="it"
+  ></df-messenger>
+
+  <!-- Codice per attivare il Text-to-Speech -->
   <script>
-    function testTTS() {
-      const utterance = new SpeechSynthesisUtterance("Ciao, questo è un test del Text-to-Speech.");
-      utterance.lang = 'it-IT';
+    function speakText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'it-IT';  // Lingua italiana
       window.speechSynthesis.speak(utterance);
     }
+
+    // Funzione per monitorare i cambiamenti nei messaggi
+    function observeMessages() {
+      const dfMessenger = document.querySelector('df-messenger');
+      if (dfMessenger) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                // Rileva i messaggi del bot
+                console.log('Testo del bot rilevato:', node.innerText);
+                speakText(node.innerText);  // Legge il testo del bot
+              }
+            });
+          });
+        });
+
+        observer.observe(dfMessenger, { childList: true, subtree: true });
+        console.log("Osservatore attivato per i messaggi.");
+      }
+    }
+
+    // Attiva l'osservatore una volta che la pagina è caricata
+    window.onload = function() {
+      setTimeout(observeMessages, 2000);  // Aspetta 2 secondi per permettere alla chat di caricarsi
+    };
   </script>
 </body>
 </html>
