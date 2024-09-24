@@ -56,7 +56,7 @@
           });
         });
 
-        observer.observe(dfMessenger, { childList: true, subtree: true });
+        observer.observe(dfMessenger.shadowRoot.querySelector('#messageList'), { childList: true, subtree: true });
         console.log("Osservatore attivato per i messaggi.");
       } else {
         console.log("df-messenger non trovato.");
