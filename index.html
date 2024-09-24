@@ -31,30 +31,32 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('#messageList');
-          if (messageList) {
-            const observer = new MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                  if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessages = node.shadowRoot?.querySelectorAll('.message.bot-message');
-                    if (botMessages) {
-                      botMessages.forEach(messageNode => {
-                        const botMessageText = messageNode.textContent.trim();
-                        if (botMessageText) {
-                          console.log('Messaggio del bot rilevato:', botMessageText);
-                          speakText(botMessageText); // Attiva il TTS
-                        }
-                      });
-                    }
+          // Osserva le modifiche ai messaggi
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  const botMessages = node.querySelectorAll('.bot-message');
+                  if (botMessages) {
+                    botMessages.forEach(messageNode => {
+                      const botMessageText = messageNode.textContent.trim();
+                      if (botMessageText) {
+                        console.log('Messaggio del bot rilevato:', botMessageText);
+                        speakText(botMessageText); // Attiva il TTS
+                      }
+                    });
                   }
-                });
+                }
               });
             });
+          });
+
+          const messageList = shadowRoot.querySelector('#messageList');
+          if (messageList) {
             observer.observe(messageList, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi nel shadowRoot.");
           } else {
-            console.error("messageList non trovato nel shadowRoot.");
+            console.error("messageList non trovato.");
           }
         } else {
           console.error("shadowRoot non trovato.");
