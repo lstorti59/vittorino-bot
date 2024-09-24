@@ -31,30 +31,39 @@
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
         console.log("df-messenger trovato.");
-        const iframe = dfMessenger.shadowRoot.querySelector('iframe');
-        if (iframe) {
-          iframe.addEventListener('load', () => {
-            const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-            const messageList = iframeDocument.querySelector('.message-list');
-            if (messageList) {
-              const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                  mutation.addedNodes.forEach((node) => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
-                      console.log("Messaggio del bot rilevato:", node.innerText);
-                      speakText(node.innerText);  // Attiva il TTS
-                    }
+        const shadowRoot = dfMessenger.shadowRoot;
+        if (shadowRoot) {
+          console.log("shadowRoot trovato.");
+          const iframe = shadowRoot.querySelector('iframe');
+          if (iframe) {
+            console.log("iframe trovato.");
+            iframe.addEventListener('load', () => {
+              console.log("iframe caricato.");
+              const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+              const messageList = iframeDocument.querySelector('.message-list');
+              if (messageList) {
+                console.log("messageList trovato.");
+                const observer = new MutationObserver((mutations) => {
+                  mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                      if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                        console.log("Messaggio del bot rilevato:", node.innerText);
+                        speakText(node.innerText);  // Attiva il TTS
+                      }
+                    });
                   });
                 });
-              });
-              observer.observe(messageList, { childList: true });
-              console.log("Osservatore attivato per i messaggi.");
-            } else {
-              console.error("messageList non trovato nel documento dell'iframe.");
-            }
-          });
+                observer.observe(messageList, { childList: true });
+                console.log("Osservatore attivato per i messaggi.");
+              } else {
+                console.error("messageList non trovato nel documento dell'iframe.");
+              }
+            });
+          } else {
+            console.error("iframe non trovato nel shadowRoot.");
+          }
         } else {
-          console.error("iframe non trovato nel shadowRoot.");
+          console.error("shadowRoot non trovato in df-messenger.");
         }
       } else {
         console.error("df-messenger non trovato.");
@@ -68,3 +77,4 @@
   </script>
 </body>
 </html>
+
