@@ -21,16 +21,23 @@
   <!-- Codice per attivare il Text-to-Speech -->
   <script>
     function speakText(text) {
-      console.log("Avvio TTS con testo:", text);  // Log quando il TTS viene chiamato
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'it-IT';  // Lingua italiana
+      utterance.volume = 1; // Volume massimo
+      utterance.pitch = 1; // Tono normale
+      utterance.rate = 1;  // Velocità normale
 
+      // Eventi di log
       utterance.onstart = function() {
-        console.log("TTS avviato con successo.");
+        console.log("TTS avviato: ", text);
       };
 
       utterance.onerror = function(event) {
-        console.error("Errore TTS:", event.error);
+        console.error("Errore nel TTS: ", event.error);
+      };
+
+      utterance.onend = function() {
+        console.log("TTS terminato.");
       };
 
       window.speechSynthesis.speak(utterance);
@@ -43,27 +50,21 @@
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                console.log("Nodo rilevato:", node);
-                if (node.innerText) {
-                  console.log('Messaggio del bot rilevato:', node.innerText);
-                  speakText(node.innerText);  // Attiva il TTS
-                } else {
-                  console.log("Nodo rilevato, ma senza testo.");
-                }
+              if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                console.log('Messaggio del bot rilevato:', node.innerText);
+                speakText(node.innerText);  // Attiva il TTS
               }
             });
           });
         });
 
-        observer.observe(dfMessenger.shadowRoot.querySelector('#messageList'), { childList: true, subtree: true });
+        observer.observe(dfMessenger.shadowRoot.querySelector('.df-message-list'), { childList: true, subtree: true });
         console.log("Osservatore attivato per i messaggi.");
       } else {
-        console.log("df-messenger non trovato.");
+        console.error("df-messenger non trovato.");
       }
     }
 
-    // Attiva l'osservatore una volta che la pagina è caricata
     window.onload = function() {
       setTimeout(observeMessages, 2000);  // Aspetta 2 secondi per permettere alla chat di caricarsi
     };
