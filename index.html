@@ -21,9 +21,9 @@
   <!-- Codice per attivare il Text-to-Speech -->
   <script>
     function speakText(text) {
-      console.log("Avvio TTS con testo:", text);  // Log per il TTS
+      console.log("Avvio TTS con testo:", text);
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'it-IT';  // Imposta la lingua italiana
+      utterance.lang = 'it-IT';
 
       utterance.onstart = function() {
         console.log("TTS avviato.");
@@ -41,27 +41,27 @@
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
         console.log("df-messenger trovato, avvio osservatore.");
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                console.log("Nodo rilevato:", node);
-                if (node.innerText) {
-                  console.log('Messaggio del bot rilevato:', node.innerText);
-                  speakText(node.innerText);  // Attiva il TTS
-                } else {
-                  console.log("Nodo rilevato, ma senza testo.");
-                }
-              }
-            });
-          });
-        });
-
-        // Assicurati che l'osservatore sia attivato sul giusto contenitore
+        
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('#messageList');
+          const messageList = shadowRoot.querySelector('df-messenger-chat');
           if (messageList) {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === Node.ELEMENT_NODE) {
+                    console.log("Nodo rilevato:", node);
+                    if (node.innerText) {
+                      console.log('Messaggio del bot rilevato:', node.innerText);
+                      speakText(node.innerText);
+                    } else {
+                      console.log("Nodo rilevato, ma senza testo.");
+                    }
+                  }
+                });
+              });
+            });
+
             observer.observe(messageList, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi.");
           } else {
@@ -75,13 +75,11 @@
       }
     }
 
-    // Attiva l'osservatore una volta che la pagina è completamente caricata
     window.onload = function() {
       console.log("Pagina caricata, avvio l'osservatore.");
-      setTimeout(observeMessages, 3000);  // Attendi 3 secondi per assicurarti che l'iframe sia completamente caricato
+      setTimeout(observeMessages, 3000);  // Aspetta 3 secondi per permettere alla chat di caricarsi
     };
   </script>
 
 </body>
 </html>
-
