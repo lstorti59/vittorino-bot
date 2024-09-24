@@ -43,9 +43,14 @@
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-              if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
-                console.log('Messaggio del bot rilevato:', node.innerText);
-                speakText(node.innerText);  // Attiva il TTS
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                console.log("Nodo rilevato:", node);
+                if (node.innerText) {
+                  console.log('Messaggio del bot rilevato:', node.innerText);
+                  speakText(node.innerText);  // Attiva il TTS
+                } else {
+                  console.log("Nodo rilevato, ma senza testo.");
+                }
               }
             });
           });
