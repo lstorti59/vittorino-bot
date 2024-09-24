@@ -21,12 +21,16 @@
   <!-- Codice per attivare il Text-to-Speech -->
   <script>
     function speakText(text) {
-      console.log("Avvio TTS con testo:", text);
+      console.log("Avvio TTS con testo:", text);  // Log quando il TTS viene chiamato
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'it-IT';
+      utterance.lang = 'it-IT';  // Lingua italiana
 
       utterance.onstart = function() {
-        console.log("TTS avviato.");
+        console.log("TTS avviato con successo.");
+      };
+
+      utterance.onend = function() {
+        console.log("TTS terminato.");
       };
 
       utterance.onerror = function(event) {
@@ -40,46 +44,33 @@
     function observeMessages() {
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
-        console.log("df-messenger trovato, avvio osservatore.");
-        
-        const shadowRoot = dfMessenger.shadowRoot;
-        if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('df-messenger-chat');
-          if (messageList) {
-            const observer = new MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                  if (node.nodeType === Node.ELEMENT_NODE) {
-                    console.log("Nodo rilevato:", node);
-                    if (node.innerText) {
-                      console.log('Messaggio del bot rilevato:', node.innerText);
-                      speakText(node.innerText);
-                    } else {
-                      console.log("Nodo rilevato, ma senza testo.");
-                    }
-                  }
-                });
-              });
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                console.log("Nodo rilevato:", node);
+                if (node.innerText) {
+                  console.log('Messaggio del bot rilevato:', node.innerText);
+                  speakText(node.innerText);  // Attiva il TTS
+                } else {
+                  console.log("Nodo rilevato, ma senza testo.");
+                }
+              }
             });
+          });
+        });
 
-            observer.observe(messageList, { childList: true, subtree: true });
-            console.log("Osservatore attivato per i messaggi.");
-          } else {
-            console.log("messageList non trovato.");
-          }
-        } else {
-          console.log("shadowRoot non trovato.");
-        }
+        observer.observe(dfMessenger, { childList: true, subtree: true });
+        console.log("Osservatore attivato per i messaggi.");
       } else {
         console.log("df-messenger non trovato.");
       }
     }
 
+    // Attiva l'osservatore una volta che la pagina è caricata
     window.onload = function() {
-      console.log("Pagina caricata, avvio l'osservatore.");
-      setTimeout(observeMessages, 3000);  // Aspetta 3 secondi per permettere alla chat di caricarsi
+      setTimeout(observeMessages, 2000);  // Aspetta 2 secondi per permettere alla chat di caricarsi
     };
   </script>
-
 </body>
 </html>
