@@ -29,10 +29,6 @@
         console.log("TTS avviato con successo.");
       };
 
-      utterance.onend = function() {
-        console.log("TTS terminato.");
-      };
-
       utterance.onerror = function(event) {
         console.error("Errore TTS:", event.error);
       };
