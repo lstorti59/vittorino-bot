@@ -57,17 +57,28 @@
           });
         });
 
-        observer.observe(dfMessenger.shadowRoot.querySelector('#messageList'), { childList: true, subtree: true });
-        console.log("Osservatore attivato per i messaggi.");
+        // Assicurati che l'osservatore sia attivato sul giusto contenitore
+        const shadowRoot = dfMessenger.shadowRoot;
+        if (shadowRoot) {
+          const messageList = shadowRoot.querySelector('#messageList');
+          if (messageList) {
+            observer.observe(messageList, { childList: true, subtree: true });
+            console.log("Osservatore attivato per i messaggi.");
+          } else {
+            console.log("messageList non trovato.");
+          }
+        } else {
+          console.log("shadowRoot non trovato.");
+        }
       } else {
         console.log("df-messenger non trovato.");
       }
     }
 
-    // Attiva l'osservatore una volta che la pagina è caricata
+    // Attiva l'osservatore una volta che la pagina è completamente caricata
     window.onload = function() {
       console.log("Pagina caricata, avvio l'osservatore.");
-      setTimeout(observeMessages, 2000);  // Attendi 2 secondi per assicurarti che il DOM sia completamente caricato
+      setTimeout(observeMessages, 3000);  // Attendi 3 secondi per assicurarti che l'iframe sia completamente caricato
     };
   </script>
 
