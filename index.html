@@ -31,18 +31,25 @@
       const dfMessenger = document.querySelector('df-messenger');
       if (dfMessenger) {
         console.log("df-messenger trovato.");
-        const shadowRoot = dfMessenger.shadowRoot;
+        const shadowRoot = dfMessenger.shadowRoot || dfMessenger.attachShadow({mode: 'open'});
         if (shadowRoot) {
-          shadowRoot.addEventListener('DOMNodeInserted', function(event) {
-            const messageNode = event.target;
-            if (messageNode.innerText) {
-              console.log("Messaggio del bot rilevato:", messageNode.innerText);
-              speakText(messageNode.innerText);  // Attiva il TTS
-            } else {
-              console.log("Nodo inserito senza testo rilevato.");
-            }
-          });
-          console.log("Listener aggiunto per DOMNodeInserted.");
+          const chatList = shadowRoot.querySelector('df-message-list');
+          if (chatList) {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === Node.ELEMENT_NODE && node.innerText) {
+                    console.log("Messaggio del bot rilevato:", node.innerText);
+                    speakText(node.innerText);  // Attiva il TTS
+                  }
+                });
+              });
+            });
+            observer.observe(chatList, { childList: true });
+            console.log("Listener aggiunto per nuovi messaggi.");
+          } else {
+            console.error("Impossibile trovare il message list nel shadowRoot.");
+          }
         } else {
           console.error("shadowRoot non trovato.");
         }
