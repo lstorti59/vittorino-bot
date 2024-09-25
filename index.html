@@ -31,13 +31,13 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('.message-list-wrapper');
+          const messageList = shadowRoot.querySelector('#messageList');
           if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
-                  if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessage = node.innerText.trim();
+                  if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('bot-message')) {
+                    const botMessage = node.querySelector('.message').innerText.trim();
                     if (botMessage) {
                       console.log('Messaggio rilevato:', botMessage);
                       speakText(botMessage);  // Attiva il TTS
