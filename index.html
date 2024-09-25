@@ -10,7 +10,7 @@
 
   <!-- Integrazione di Dialogflow Messenger -->
   <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-  
+
   <df-messenger
     intent="WELCOME"
     chat-title="Vittorino_Bot"
@@ -22,7 +22,7 @@
   <script>
     function speakText(text) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'it-IT';
+      utterance.lang = 'it-IT';  // Lingua italiana
       window.speechSynthesis.speak(utterance);
     }
 
@@ -31,44 +31,31 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Osserva le modifiche ai messaggi
-          const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-              mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                  const botMessages = node.querySelectorAll('.bot-message');
-                  if (botMessages) {
-                    botMessages.forEach(messageNode => {
-                      const botMessageText = messageNode.textContent.trim();
-                      if (botMessageText) {
-                        console.log('Messaggio del bot rilevato:', botMessageText);
-                        speakText(botMessageText); // Attiva il TTS
-                      }
-                    });
-                  }
-                }
-              });
-            });
-          });
-
           const messageList = shadowRoot.querySelector('#messageList');
           if (messageList) {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === Node.ELEMENT_NODE) {
+                    const botMessage = node.innerText.trim();
+                    if (botMessage) {
+                      console.log('Messaggio rilevato:', botMessage);
+                      speakText(botMessage);  // Attiva il TTS
+                    }
+                  }
+                });
+              });
+            });
             observer.observe(messageList, { childList: true, subtree: true });
-            console.log("Osservatore attivato per i messaggi nel shadowRoot.");
-          } else {
-            console.error("messageList non trovato.");
+            console.log("Osservatore attivato per i messaggi.");
           }
-        } else {
-          console.error("shadowRoot non trovato.");
         }
-      } else {
-        console.error("df-messenger non trovato.");
       }
     }
 
     // Attiva l'osservatore una volta che la pagina è caricata
     window.onload = function() {
-      setTimeout(observeMessages, 2000); // Aspetta 2 secondi per permettere alla chat di caricarsi
+      setTimeout(observeMessages, 2000);  // Aspetta 2 secondi per permettere alla chat di caricarsi
     };
   </script>
 
