@@ -31,19 +31,25 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Trova i messaggi direttamente all'interno dello shadowRoot
-          const botMessages = shadowRoot.querySelectorAll('.message.bot-message.bot-animation');
-          if (botMessages.length > 0) {
-            botMessages.forEach(messageNode => {
-              const botMessageText = messageNode.textContent.trim();
-              if (botMessageText) {
-                console.log('Messaggio del bot rilevato:', botMessageText);
-                speakText(botMessageText);  // Attiva il TTS
-              }
+          const messageList = shadowRoot.querySelector('div[role="log"]'); // Nuovo selettore per trovare i messaggi
+          if (messageList) {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === Node.ELEMENT_NODE) {
+                    const botMessage = node.innerText.trim();
+                    if (botMessage) {
+                      console.log('Messaggio del bot rilevato:', botMessage);
+                      speakText(botMessage);  // Attiva il TTS
+                    }
+                  }
+                });
+              });
             });
+            observer.observe(messageList, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi.");
           } else {
-            console.error("Nessun messaggio del bot trovato.");
+            console.error("Contenitore dei messaggi non trovato nel shadowRoot.");
           }
         } else {
           console.error("shadowRoot non trovato.");
