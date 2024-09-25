@@ -31,21 +31,20 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('df-message-list'); // Modifica del selettore
+          // Cerca i messaggi nella lista dei messaggi nel shadowRoot
+          const messageList = shadowRoot.querySelector('div.message-list');
           if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                   if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessages = node.shadowRoot?.querySelectorAll('.message.bot-message'); 
-                    if (botMessages) {
-                      botMessages.forEach(messageNode => {
-                        const botMessageText = messageNode.textContent.trim();
-                        if (botMessageText) {
-                          console.log('Messaggio del bot rilevato:', botMessageText);
-                          speakText(botMessageText);  // Attiva il TTS
-                        }
-                      });
+                    const botMessage = node.querySelector('.message.bot-message');
+                    if (botMessage) {
+                      const botMessageText = botMessage.textContent.trim();
+                      if (botMessageText) {
+                        console.log('Messaggio del bot rilevato:', botMessageText);
+                        speakText(botMessageText);  // Attiva il TTS
+                      }
                     }
                   }
                 });
