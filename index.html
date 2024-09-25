@@ -31,25 +31,34 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('#messageList');
+          const messageList = shadowRoot.querySelector('df-messenger-chat .message-list');
           if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                   if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessage = node.innerText.trim();
-                    if (botMessage) {
-                      console.log('Messaggio rilevato:', botMessage);
-                      speakText(botMessage);  // Attiva il TTS
-                    }
+                    const botMessages = node.querySelectorAll('.bot-message');
+                    botMessages.forEach((messageNode) => {
+                      const botMessageText = messageNode.innerText.trim();
+                      if (botMessageText) {
+                        console.log('Messaggio del bot rilevato:', botMessageText);
+                        speakText(botMessageText);  // Attiva il TTS
+                      }
+                    });
                   }
                 });
               });
             });
             observer.observe(messageList, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi.");
+          } else {
+            console.error("messageList non trovato nel shadowRoot.");
           }
+        } else {
+          console.error("shadowRoot non trovato.");
         }
+      } else {
+        console.error("df-messenger non trovato.");
       }
     }
 
