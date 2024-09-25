@@ -31,30 +31,25 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageList = shadowRoot.querySelector('#messageList'); // Questo è il contenitore dei messaggi
-          if (messageList) {
-            const observer = new MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                  if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessages = node.querySelectorAll('.message.bot-message.bot-animation');
-                    botMessages.forEach(messageNode => {
-                      const botMessageText = messageNode.textContent.trim();
-                      if (botMessageText) {
-                        console.log('Messaggio del bot rilevato:', botMessageText);
-                        speakText(botMessageText);  // Attiva il TTS
-                      }
-                    });
-                  }
-                });
-              });
+          // Trova i messaggi direttamente all'interno dello shadowRoot
+          const botMessages = shadowRoot.querySelectorAll('.message.bot-message.bot-animation');
+          if (botMessages.length > 0) {
+            botMessages.forEach(messageNode => {
+              const botMessageText = messageNode.textContent.trim();
+              if (botMessageText) {
+                console.log('Messaggio del bot rilevato:', botMessageText);
+                speakText(botMessageText);  // Attiva il TTS
+              }
             });
-            observer.observe(messageList, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi.");
           } else {
-            console.error("messageList non trovato.");
+            console.error("Nessun messaggio del bot trovato.");
           }
+        } else {
+          console.error("shadowRoot non trovato.");
         }
+      } else {
+        console.error("df-messenger non trovato.");
       }
     }
 
