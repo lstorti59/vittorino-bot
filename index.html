@@ -31,22 +31,26 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          const messageContainers = shadowRoot.querySelectorAll('div'); // Prende tutti i div
-          const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-              mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('bot-message')) {
-                  const botMessageText = node.innerText.trim();
-                  if (botMessageText) {
-                    console.log('Messaggio rilevato:', botMessageText);
-                    speakText(botMessageText);  // Attiva il TTS
+          const messageList = shadowRoot.querySelector('div.df-messenger-chat-wrapper');
+          if (messageList) {
+            const observer = new MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('bot-message')) {
+                    const botMessageText = node.innerText.trim();
+                    if (botMessageText) {
+                      console.log('Messaggio del bot rilevato:', botMessageText);
+                      speakText(botMessageText);  // Attiva il TTS
+                    }
                   }
-                }
+                });
               });
             });
-          });
-          messageContainers.forEach(container => observer.observe(container, { childList: true, subtree: true }));
-          console.log("Osservatore attivato per i messaggi.");
+            observer.observe(messageList, { childList: true, subtree: true });
+            console.log("Osservatore attivato per i messaggi.");
+          } else {
+            console.error("Contenitore dei messaggi non trovato.");
+          }
         } else {
           console.error("shadowRoot non trovato.");
         }
@@ -63,4 +67,5 @@
 
 </body>
 </html>
+
 
