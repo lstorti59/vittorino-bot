@@ -31,12 +31,7 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Trova e stampa tutti gli elementi nel shadowRoot
-          const allElements = shadowRoot.querySelectorAll('*');
-          console.log("Elementi trovati nel shadowRoot:", allElements);
-          
-          // Prova a cercare dinamicamente un contenitore di messaggi
-          const messageList = shadowRoot.querySelector('.message-list-wrapper'); // Modifica il selettore se necessario
+          const messageList = shadowRoot.querySelector('.message-list-wrapper');
           if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
