@@ -31,16 +31,19 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Osserva tutte le modifiche nel shadowRoot
+          // Osserva tutti i cambiamenti all'interno del shadowRoot
           const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
               mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('bot-message')) {
-                  const botMessageText = node.textContent.trim();
-                  if (botMessageText) {
-                    console.log('Messaggio del bot rilevato:', botMessageText);
-                    speakText(botMessageText);  // Attiva il TTS
-                  }
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  const botMessages = node.querySelectorAll('.message.bot-message');
+                  botMessages.forEach((messageNode) => {
+                    const botMessageText = messageNode.textContent.trim();
+                    if (botMessageText) {
+                      console.log('Messaggio del bot rilevato:', botMessageText);
+                      speakText(botMessageText);  // Attiva il TTS
+                    }
+                  });
                 }
               });
             });
