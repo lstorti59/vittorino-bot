@@ -31,8 +31,8 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Cerca i messaggi nella lista dei messaggi nel shadowRoot
-          const messageList = shadowRoot.querySelector('div.message-list');
+          // Trova il contenitore dei messaggi cercando tra i nodi del shadowRoot
+          const messageList = shadowRoot.querySelector('div[role="list"]');
           if (messageList) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
@@ -71,3 +71,4 @@
 
 </body>
 </html>
+
