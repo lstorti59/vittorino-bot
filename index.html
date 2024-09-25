@@ -31,14 +31,14 @@
       if (dfMessenger) {
         const shadowRoot = dfMessenger.shadowRoot;
         if (shadowRoot) {
-          // Trova il contenitore dei messaggi cercando tra i nodi del shadowRoot
-          const messageList = shadowRoot.querySelector('div[role="list"]');
-          if (messageList) {
+          // Troviamo il contenitore dei messaggi direttamente all'interno dello shadowRoot
+          const messageContainer = shadowRoot.querySelector('.df-message-list');
+          if (messageContainer) {
             const observer = new MutationObserver((mutations) => {
               mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                   if (node.nodeType === Node.ELEMENT_NODE) {
-                    const botMessage = node.querySelector('.message.bot-message');
+                    const botMessage = node.querySelector('.bot-message');
                     if (botMessage) {
                       const botMessageText = botMessage.textContent.trim();
                       if (botMessageText) {
@@ -50,7 +50,7 @@
                 });
               });
             });
-            observer.observe(messageList, { childList: true, subtree: true });
+            observer.observe(messageContainer, { childList: true, subtree: true });
             console.log("Osservatore attivato per i messaggi.");
           } else {
             console.error("Contenitore dei messaggi non trovato nel shadowRoot.");
@@ -71,4 +71,3 @@
 
 </body>
 </html>
-
